@@ -1778,3 +1778,27 @@ class Solution:
         
         return True
 
+
+# Meta Coding Interview Prep 1
+def rotationalCipher(input, rotation_factor):
+  # Write your code here
+  output = ""
+  for i in range(len(input)):
+    
+    if input[i].isalnum():
+      if input[i].isalpha():
+        if input[i].isupper():
+          output += chr((ord(input[i]) + rotation_factor - 65) % 26 + 65)
+        else:
+          output += chr((ord(input[i]) + rotation_factor - 97) % 26 + 97)
+      if input[i].isnumeric():
+        # print("number ", int(input[i]) + rotation_factor)
+        if int(input[i]) + rotation_factor < 10:
+          output += str(int(input[i]) + rotation_factor)
+          # print("1: ", str(int(input[i]) + rotation_factor))
+        else:
+          output += str((int(input[i]) + rotation_factor) % 10)
+          # print("2: ", str(int(input[i]) + rotation_factor % 10))
+    else:
+      output = output + input[i]
+  return output
