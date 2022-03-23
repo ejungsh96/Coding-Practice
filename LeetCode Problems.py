@@ -1682,3 +1682,99 @@ class Solution:
             # shift to inner layer
             r -= 1
             l += 1
+            
+387. First Unique Character in a String
+Given a string s, find the first non-repeating character in it and return its index. If it does not exist, return -1.
+Example 1:
+Input: s = "leetcode"
+Output: 0
+ 
+class Solution:
+    def firstUniqChar(self, s: str) -> int:
+        # Counter O(n^2)
+        counter = Counter(s) # O(n)
+        
+        for index, char in enumerate(s): # O(n)
+            if counter[char] == 1:
+                return index # O((n-m)*m) where n: len(string), m: len(substring)
+        
+        return -1
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+242. Valid Anagram
+Given two strings s and t, return true if t is an anagram of s, and false otherwise.
+An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
+Example 1:
+Input: s = "anagram", t = "nagaram"
+Output: true
+ 
+class Solution:
+    def isAnagram(self, s: str, t: str) -> bool:
+        # Sorting
+        return sorted(s) == sorted(t)
+    
+        # Hash Table
+        if len(s) != len(t): return False 
+    
+        counter = {}
+        for i in s:
+            if i in counter:
+                counter[i] += 1
+            else:
+                counter[i] = 1
+        
+        for j in t:
+            if j not in counter:
+                return False
+            else:
+                counter[j] -= 1
+        
+        for value in counter.values():
+            if value != 0:
+                return False
+        
+        return True
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+125. Valid Palindrome
+A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.
+Given a string s, return true if it is a palindrome, or false otherwise.
+Example 1:
+Input: s = "A man, a plan, a canal: Panama"
+Output: true
+Explanation: "amanaplanacanalpanama" is a palindrome.
+class Solution:
+    def isPalindrome(self, s: str) -> bool:
+        converted = [i for i in s.lower() if i.isalnum()]
+        
+        # reverse
+        return converted == converted[::-1]
+    
+        # two pointer    
+        left, right = 0, len(converted) - 1
+        
+        while left < right:
+            if converted[left] != converted[right]:
+                return False
+            left += 1
+            right -= 1
+        
+        return True
+
