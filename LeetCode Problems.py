@@ -1802,3 +1802,159 @@ def rotationalCipher(input, rotation_factor):
     else:
       output = output + input[i]
   return output
+
+162. Find Peak Element
+A peak element is an element that is strictly greater than its neighbors.
+Given an integer array nums, find a peak element, and return its index. If the array contains multiple peaks, return the index to any of the peaks.
+You may imagine that nums[-1] = nums[n] = -∞.
+You must write an algorithm that runs in O(log n) time.
+Example 1:
+Input: nums = [1,2,3,1]
+Output: 2
+Explanation: 3 is a peak element and your function should return the index number 2.
+ 
+class Solution:
+    def findPeakElement(self, nums: List[int]) -> int:
+        # Linear Search
+        for i in range(len(nums) - 1):
+            if nums[i] > nums[i + 1]:
+                return i
+        
+        return len(nums) - 1
+    
+        # Recursive Binary Search
+        def search(nums, left, right):
+            if left == right:
+                return left
+            mid = (left + right) // 2
+            if nums[mid] > nums[mid + 1]:
+                return search(nums, left, mid)
+            return search(nums, mid + 1, right)
+        
+        return search(nums, 0, len(nums) - 1)
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+394. Decode String
+Given an encoded string, return its decoded string.
+The encoding rule is: k[encoded_string], where the encoded_string inside the square brackets is being repeated exactly k times. Note that k is guaranteed to be a positive integer.
+You may assume that the input string is always valid; there are no extra white spaces, square brackets are well-formed, etc.
+Furthermore, you may assume that the original data does not contain any digits and that digits are only for those repeat numbers, k. For example, there will not be input like 3a or 2[4].
+Example 1:
+Input: s = "3[a]2[bc]"
+Output: "aaabcbc"
+ 
+class Solution:
+    def decodeString(self, s: str) -> str:
+        stack = []
+        
+        for i in range(len(s)):
+            # put into the stack until it is "]"
+            if s[i] != "]":
+                stack.append(s[i])
+            else:
+                # parse the substring
+                substr = ""
+                while stack[-1] != "[":
+                    substr = stack.pop() + substr
+                stack.pop()
+                
+                # parse the number
+                k = ""
+                while stack and stack[-1].isdigit():
+                    k = stack.pop() + k
+                
+                # put the multiplied string back into the stack
+                stack.append(int(k) * substr)
+        
+        # all are decoded, return in a string form
+        return "".join(stack)
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+8. String to Integer (atoi)
+Implement the myAtoi(string s) function, which converts a string to a 32-bit signed integer (similar to C/C++'s atoi function).
+The algorithm for myAtoi(string s) is as follows:
+Read in and ignore any leading whitespace.
+Check if the next character (if not already at the end of the string) is '-' or '+'. Read this character in if it is either. This determines if the final result is negative or positive respectively. Assume the result is positive if neither is present.
+Read in next the characters until the next non-digit character or the end of the input is reached. The rest of the string is ignored.
+Convert these digits into an integer (i.e. "123" -> 123, "0032" -> 32). If no digits were read, then the integer is 0. Change the sign as necessary (from step 2).
+If the integer is out of the 32-bit signed integer range [-231, 231 - 1], then clamp the integer so that it remains in the range. Specifically, integers less than -231 should be clamped to -231, and integers greater than 231 - 1 should be clamped to 231 - 1.
+Return the integer as the final result.
+Note:
+Only the space character ' ' is considered a whitespace character.
+Do not ignore any characters other than the leading whitespace or the rest of the string after the digits.
+Example 1:
+Input: s = "42"
+Output: 42
+Explanation: The underlined characters are what is read in, the caret is the current reader position.
+Step 1: "42" (no characters read because there is no leading whitespace)
+         ^
+Step 2: "42" (no characters read because there is neither a '-' nor '+')
+         ^
+Step 3: "42" ("42" is read in)
+           ^
+The parsed integer is 42.
+Since 42 is in the range [-231, 231 - 1], the final result is 42.
+ 
+class Solution:
+    def myAtoi(self, s: str) -> int:
+        sign = 1 
+        result = 0
+        index = 0
+        n = len(s)
+        
+        INT_MAX = pow(2,31) - 1 
+        INT_MIN = -pow(2,31)
+        
+        # Discard all spaces from the beginning of the input string.
+        while index < n and s[index] == ' ':
+            index += 1
+        
+        # sign = +1, if it's positive number, otherwise sign = -1. 
+        if index < n and s[index] == '+':
+            sign = 1
+            index += 1
+        elif index < n and s[index] == '-':
+            sign = -1
+            index += 1
+        
+        # Traverse next digits of input and stop if it is not a digit. 
+        # End of string is also non-digit character.
+        while index < n and s[index].isdigit():
+            digit = int(s[index])
+            
+            # Check overflow and underflow conditions. 
+            if ((result > INT_MAX // 10) or (result == INT_MAX // 10 and digit > INT_MAX % 10)):
+                # If integer overflowed return 2^31-1, otherwise if underflowed return -2^31.    
+                return INT_MAX if sign == 1 else INT_MIN
+            
+            # Append current digit to the result.
+            result = 10 * result + digit
+            index += 1
+        
+        # We have formed a valid number without any overflow/underflow.
+        # Return it after multiplying it with its sign.
+        return sign * result
