@@ -1958,3 +1958,122 @@ class Solution:
         # We have formed a valid number without any overflow/underflow.
         # Return it after multiplying it with its sign.
         return sign * result
+
+                                                                                             215. Kth Largest Element in an Array
+Given an integer array nums and an integer k, return the kth largest element in the array.
+Note that it is the kth largest element in the sorted order, not the kth distinct element.
+Example 1:
+Input: nums = [3,2,1,5,6,4], k = 2
+Output: 5
+ 
+class Solution:
+    def findKthLargest(self, nums: List[int], k: int) -> int:
+        # Min-Heap - return pop len(nums) - k + 1
+        heapq.heapify(nums)
+        output = None
+        for _ in range(len(nums) - k + 1):
+            output = heapq.heappop(nums)
+        return output
+    
+        # Max-Heap - pop k - 1 times and return heappop()
+        heapq._heapify_max(nums)
+        for _ in range(k - 1):
+            heapq._heappop_max(nums)
+        return heapq._heappop_max(nums)
+    
+        # Use nlargest function
+        return heapq.nlargest(k, nums)[-1]
+    
+        # Use Min-Heap and keep the size of heap to k
+        heap = []
+        for i in range(len(nums)):
+            heapq.heappush(heap, nums[i])
+            if len(heap) > k:
+                heapq.heappop(heap)
+            
+        return heapq.heappop(heap)
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+973. K Closest Points to Origin
+Given an array of points where points[i] = [xi, yi] represents a point on the X-Y plane and an integer k, return the k closest points to the origin (0, 0).
+The distance between two points on the X-Y plane is the Euclidean distance (i.e., √(x1 - x2)2 + (y1 - y2)2).
+You may return the answer in any order. The answer is guaranteed to be unique (except for the order that it is in).
+ 
+Example 1:
+
+Input: points = [[1,3],[-2,2]], k = 1
+Output: [[-2,2]]
+Explanation:
+The distance between (1, 3) and the origin is sqrt(10).
+The distance between (-2, 2) and the origin is sqrt(8).
+Since sqrt(8) < sqrt(10), (-2, 2) is closer to the origin.
+We only want the closest k = 1 points from the origin, so the answer is just [[-2,2]].
+class Solution:
+    def kClosest(self, points: List[List[int]], k: int) -> List[List[int]]:
+        # Solution 1
+        # Calculate the distance to (0, 0) and store in a heap
+        # return a list of k coordinates
+        
+        # create a hash map with the distance to origin
+        # {index : distance}
+        distance_map = {}   # O(n)
+        for i in range(len(points)):
+            distance_map[i] = math.sqrt(points[i][0] ** 2 + points[i][1] ** 2)
+        
+        # put into heap
+        heap = []   # O(n)
+        for dist in distance_map.values():
+            heapq.heappush(heap, dist)
+        
+        # output
+        output = []
+        for _ in range(k):  # O(m)
+            pop = heapq.heappop(heap)
+            for key, value in distance_map.items(): # O(n)
+                if value == pop:
+                    if points[key] not in output:
+                        output.append(points[key])
+        
+        return output
+ 
+        # Solution 2
+        # Sort
+        # Sort the list with a custom comparator function
+        points.sort(key=self.squared_distance)
+        
+        # Return the first k elements of the sorted list
+        return points[:k]
+    
+    def squared_distance(self, point: List[int]) -> int:
+        """Calculate and return the squared Euclidean distance."""
+        return point[0] ** 2 + point[1] ** 2
+        
+        
+        # Solution 3
+        heap = [(-self.squared_distance(points[i]), i) for i in range(k)]
+        heapq.heapify(heap)
+        for i in range(k, len(points)):
+            dist = -self.squared_distance(points[i])
+            if dist > heap[0][0]:
+                # If this point is closer than the kth farthest,
+                # discard the farthest point and add this one
+                heapq.heappushpop(heap, (dist, i))
+        
+        # Return all points stored in the max heap
+        return [points[i] for (_, i) in heap]
+    
+    def squared_distance(self, point: List[int]) -> int:
+        """Calculate and return the squared Euclidean distance."""
+        return point[0] ** 2 + point[1] ** 2
