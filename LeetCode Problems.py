@@ -2110,3 +2110,82 @@ class Solution:
             return len(haystack) - l
         
         return -1
+
+                                                                                             
+150. Evaluate Reverse Polish Notation
+Evaluate the value of an arithmetic expression in Reverse Polish Notation.
+Valid operators are +, -, *, and /. Each operand may be an integer or another expression.
+Note that division between two integers should truncate toward zero.
+It is guaranteed that the given RPN expression is always valid. That means the expression would always evaluate to a result, and there will not be any division by zero operation.
+Example 1:
+Input: tokens = ["2","1","+","3","*"]
+Output: 9
+Explanation: ((2 + 1) * 3) = 9
+ 
+class Solution:
+    def evalRPN(self, tokens: List[str]) -> int:
+        stack = []
+        for i in tokens:
+            if i.lstrip('-').isnumeric():
+                stack.append(i)
+            else:
+                a = int(stack.pop())
+                b = int(stack.pop())
+                
+                if i == "+":
+                    stack.append(b + a)
+                elif i == "-":
+                    stack.append(b - a)
+                elif i == "*":
+                    stack.append(b * a)
+                elif i == "/":
+                    stack.append(b / a)
+        
+        return int(stack[0])
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+22. Generate Parentheses
+Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
+Example 1:
+Input: n = 3
+Output: ["((()))","(()())","(())()","()(())","()()()"]
+ 
+class Solution:
+    def generateParenthesis(self, n: int) -> List[str]:
+        # only add open parenthesis if open < n
+        # only add closed parenthesis if open > closed
+        # valid if open = closed = n
+        
+        stack = []
+        res = []
+        
+        def backtrack(openN, closedN):
+            if openN == closedN == n:
+                res.append("".join(stack))
+                return
+            
+            if openN < n:
+                stack.append('(')
+                backtrack(openN + 1, closedN)
+                stack.pop()
+            
+            if openN > closedN:
+                stack.append(')')
+                backtrack(openN, closedN + 1)
+                stack.pop()
+            
+        backtrack(0, 0)
+        return res
