@@ -2221,3 +2221,101 @@ class Solution:
         
         return res
 
+199. Binary Tree Right Side View
+Given the root of a binary tree, imagine yourself standing on the right side of it, return the values of the nodes you can see ordered from top to bottom.
+Example 1:
+
+Input: root = [1,2,3,null,5,null,4]
+Output: [1,3,4]
+ 
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def rightSideView(self, root: Optional[TreeNode]) -> List[int]:
+        res = []
+        
+        if not root:
+            return res
+        
+        queue = collections.deque()
+        queue.append(root)
+        
+        while queue:
+            level_right = None
+            for _ in range(len(queue)):
+                node = queue.popleft()
+                level_right = node.val
+                
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
+            res.append(level_right)
+        
+        return res
+ 
+ 
+ 
+ 
+15. 3Sum
+Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
+Notice that the solution set must not contain duplicate triplets.
+ 
+Example 1:
+Input: nums = [-1,0,1,2,-1,-4]
+Output: [[-1,-1,2],[-1,0,1]]
+ 
+class Solution:
+    def threeSum(self, nums: List[int]) -> List[List[int]]:
+#         nums_len = len(nums)
+        
+#         if nums_len < 3:
+#             return []
+        
+#         res = []
+        
+#         for i in range(nums_len):
+#             changed_sum = -i
+            
+#             two_nums = []
+#             for j in range(nums_len):
+#                 if i != j:
+#                     two_nums.append(nums[j])
+            
+#             seen = set()
+#             for a in two_nums:
+#                 comp = changed_sum - a
+#                 seen.add(comp)
+#                 if comp in seen:
+#                     res.append([nums[i], a, comp])
+        
+#         return res
+        res = []
+        nums.sort()
+        for i in range(len(nums)):
+            if nums[i] > 0:
+                break
+            if i == 0 or nums[i - 1] != nums[i]:
+                self.twoSumII(nums, i, res)
+        
+        return res
+    
+    def twoSumII(self, nums: List[int], i: int, res: List[List[int]]):
+        lo, hi = i + 1, len(nums) - 1
+        
+        while (lo < hi):
+            summation = nums[i] + nums[lo] + nums[hi]
+            if summation < 0:
+                lo += 1
+            elif summation > 0:
+                hi -= 1
+            else:
+                res.append([nums[i], nums[lo], nums[hi]])
+                lo += 1
+                hi -= 1
+                while lo < hi and nums[lo] == nums[lo - 1]:
+                    lo += 1
