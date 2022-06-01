@@ -2319,3 +2319,52 @@ class Solution:
                 hi -= 1
                 while lo < hi and nums[lo] == nums[lo - 1]:
                     lo += 1
+
+424. Longest Repeating Character Replacement
+You are given a string s and an integer k. You can choose any character of the string and change it to any other uppercase English character. You can perform this operation at most k times.
+Return the length of the longest substring containing the same letter you can get after performing the above operations.
+Example 1:
+Input: s = "ABAB", k = 2
+Output: 4
+Explanation: Replace the two 'A's with two 'B's or vice versa.
+ 
+class Solution:
+    def characterReplacement(self, s: str, k: int) -> int:
+#         # Failed the case - s: "ABBB", k: 2
+#         seen_char = set()
+#         left = 0
+#         max_count = 0
+#         k_count = k
+        
+#         for right in range(len(s)):
+#             seen_char.add(s[right])
+            
+#             if len(seen_char) <= 1:
+#                 max_count = max(max_count, right - left + 1)
+#             else:
+#                 k_count -= 1
+#                 if k_count >= 0:
+#                     seen_char.remove(s[right])
+#                     max_count = max(max_count, right - left + 1)
+#                 else:
+#                     seen_char.remove(s[left])
+#                     left = right
+#                     k_count = k
+        
+#         return max_count
+ 
+        char_count = {}
+        max_count = 0
+        
+        left = 0
+        for right in range(len(s)):
+            char_count[s[right]] = 1 + char_count.get(s[right], 0)
+            
+            # while the number of replacement is greater than k
+            while (right - left + 1) - max(char_count.values()) > k:
+                char_count[s[left]] -= 1
+                left += 1
+            
+            max_count = max(max_count, right - left + 1)
+        
+        return max_count
