@@ -2459,3 +2459,77 @@ class Solution:
 #             else:
 #                 return True
 #         return False
+
+                                                                                             
+875. Koko Eating Bananas
+Koko loves to eat bananas. There are n piles of bananas, the ith pile has piles[i] bananas. The guards have gone and will come back in h hours.
+Koko can decide her bananas-per-hour eating speed of k. Each hour, she chooses some pile of bananas and eats k bananas from that pile. If the pile has less than k bananas, she eats all of them instead and will not eat any more bananas during this hour.
+Koko likes to eat slowly but still wants to finish eating all the bananas before the guards return.
+Return the minimum integer k such that she can eat all the bananas within h hours.
+Example 1:
+Input: piles = [3,6,7,11], h = 8
+Output: 4
+ 
+class Solution:
+    def minEatingSpeed(self, piles: List[int], h: int) -> int:
+#         # Initial Try - Time Limit Exceeded
+#         if sum(piles) <= h:
+#             return 1
+#         if len(piles) == h:
+#             return max(piles)
+#         if len(piles) == 1:
+#             return piles[0] // h + 1
+ 
+#         for i in range(max(piles), 0, -1):
+#             k_sum = 0
+#             for banana in piles:
+#                 if i >= banana:
+#                     k_sum += 1
+#                 else:
+#                     if banana % i == 0:
+#                         k_sum += banana // i
+#                     else:
+#                         k_sum += banana // i + 1
+            
+#             # print(f"i: {i}, k_sum: {k_sum}")
+#             if k_sum > h:
+#                 # print("entered!")
+#                 return i + 1
+        
+#         # My solution - Binary Search - Memory Limit Exceeded
+#         potential_k = list(range(1, max(piles) + 1))
+#         left, right = 0, len(potential_k) - 1
+        
+#         while left <= right:
+#             mid = (left + right) // 2
+#             k_sum = 0
+#             for banana in piles:
+#                 if banana % potential_k[mid] == 0:
+#                     k_sum += banana // potential_k[mid]
+#                 else:
+#                     k_sum += banana // potential_k[mid] + 1
+            
+#             if k_sum < h:
+#                 right = mid - 1
+#             elif k_sum > h:
+#                 left = mid + 1
+#             else:
+#                 return potential_k[mid]
+        
+        
+        # Solution
+        l, r = 1, max(piles)
+        k = 0
+        
+        while l <= r:
+            m = (l + r) // 2
+            
+            totalTime = 0
+            for p in piles:
+                totalTime += ((p-1)//m) + 1     # math.ceil(p / m)
+            if totalTime <= h:
+                k = m
+                r = m - 1
+            else:
+                l = m + 1
+        return k
