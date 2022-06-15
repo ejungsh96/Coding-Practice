@@ -2557,3 +2557,53 @@ class Solution:
             return rob2
         
         return max(rob_line(nums[:-1]), rob_line(nums[1:]))
+
+200. Number of Islands
+Given an m x n 2D binary grid grid which represents a map of '1's (land) and '0's (water), return the number of islands.
+An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
+Example 1:
+Input: grid = [
+  ["1","1","1","1","0"],
+  ["1","1","0","1","0"],
+  ["1","1","0","0","0"],
+  ["0","0","0","0","0"]
+]
+Output: 1
+ 
+class Solution:
+    def numIslands(self, grid: List[List[str]]) -> int:
+        # BFS
+        # Seen grid
+        # Increase the number of island at the base case
+        
+        ROWS = len(grid)
+        COLS = len(grid[0])
+        seen = [[0 for _ in range(COLS)] for _ in range(ROWS)]
+        directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        count = 0
+        
+        def BFS(row, col):
+            q = collections.deque()
+            if grid[row][col] == "1":
+                q.append((row, col))
+                seen[row][col] = 1
+            
+                while q:
+                    cur_row, cur_col = q.popleft()
+                    for x, y in directions:
+                        new_row, new_col = cur_row + x, cur_col + y
+                        if 0 <= new_row < ROWS and 0 <= new_col < COLS:
+                            if seen[new_row][new_col] == 1:
+                                continue
+                            else:
+                                seen[new_row][new_col] = 1
+                                if grid[new_row][new_col] == "1":
+                                    q.append((new_row, new_col))
+        
+        for i in range(ROWS):
+            for j in range(COLS):
+                if grid[i][j] == "1" and seen[i][j] == 0:
+                    BFS(i, j)
+                    count += 1
+        
+        return count
