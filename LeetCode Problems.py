@@ -2607,3 +2607,74 @@ class Solution:
                     count += 1
         
         return count
+
+11. Container With Most Water
+You are given an integer array height of length n. There are n vertical lines drawn such that the two endpoints of the ith line are (i, 0) and (i, height[i]).
+Find two lines that together with the x-axis form a container, such that the container contains the most water.
+Return the maximum amount of water a container can store.
+Notice that you may not slant the container.
+Example 1:
+
+Input: height = [1,8,6,2,5,4,8,3,7]
+Output: 49
+Explanation: The above vertical lines are represented by array [1,8,6,2,5,4,8,3,7]. In this case, the max area of water (blue section) the container can contain is 49.
+ 
+class Solution:
+    def maxArea(self, height: List[int]) -> int:
+        l, r = 0, len(height) - 1
+        max_area = 0
+        
+        while l <= r:
+            area = (r - l) * min(height[l], height[r])
+            
+            max_area = max(max_area, area)
+            
+            if height[l] < height[r]:
+                l += 1
+            else:
+                r -= 1
+        
+        return max_area
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+55. Jump Game
+You are given an integer array nums. You are initially positioned at the array's first index, and each element in the array represents your maximum jump length at that position.
+Return true if you can reach the last index, or false otherwise.
+Example 1:
+Input: nums = [2,3,1,1,4]
+Output: true
+Explanation: Jump 1 step from index 0 to 1, then 3 steps to the last index.
+ 
+class Solution:
+    def canJump(self, nums: List[int]) -> bool:
+        
+#         last_index = len(nums) - 1
+#         visited = [0 for _ in range(len(nums))]
+        
+#         def recursion(index):
+#             if index == last_index:
+#                 return true
+#             recursion
+            
+#         for i in range(len(nums)):
+#             for j in range(1, i + 1):
+#                 if visited[i + j] == 0:
+#                     visited[i + j] = 1
+#                     recursion(i + j)
+ 
+        # Greedy
+        goal = len(nums) - 1
+ 
+        for i in range(len(nums) - 1, -1, -1):
+            # We can reach the goal if current_index + max_jump >= goal_index
+            if i + nums[i] >= goal:
+                # change our goal to the current_index
+                goal = i
+        
+        return True if goal == 0 else False
